@@ -15,3 +15,7 @@ Links the plugin to the sample app
 
 `ionic serve` 
 Starts the app
+
+
+TODO:
+- Complete the e2e integration between the Ionic application and the Cordova plugin, with callbacks to the application.
