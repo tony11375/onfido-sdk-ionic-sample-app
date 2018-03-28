@@ -3,7 +3,7 @@ Sample app showcasing the integration of the Onfido SDK on an Ionic app
 
 This project consists of 2 modules:
 - `onfidoSampleApp` contains the sample app code
-- `cordova-plugin-template` contains the Cordova plugin that wraps the Onfido Android SDK
+- `cordova-plugin-template` contains the Cordova plugin that wraps the Onfido Android SDK. Based on [this template](https://github.com/ionic-team/cordova-plugin-template)
 
 How to run:
 
