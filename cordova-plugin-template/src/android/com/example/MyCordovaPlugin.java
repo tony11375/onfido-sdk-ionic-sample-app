@@ -79,12 +79,12 @@ client.startActivityForResult(context, 1, onfidoConfig);
     return Applicant.builder()
             .withFirstName("Ionic")
             .withLastName("User")
-            .withToken("YOUR_MOBILE_TOKEN")
             .build();
   }
 
   private OnfidoConfig.Builder getTestOnfidoConfigBuilder() {
       return OnfidoConfig.builder()
+			  .withToken("YOUR_MOBILE_TOKEN")
               .withApplicant(getTestApplicant());
   }
 }
