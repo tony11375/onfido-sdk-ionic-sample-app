@@ -49,7 +49,7 @@ public class MyCordovaPlugin extends CordovaPlugin {
   }
 
   public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
-    if(action.equals("startSdk")) {
+    if(action.equals("launchFido")) {
       Activity context=this.cordova.getActivity();
       client = OnfidoFactory.create(context).getClient();
 
