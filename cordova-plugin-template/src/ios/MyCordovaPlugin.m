@@ -1,28 +1,48 @@
 #import "MyCordovaPlugin.h"
 
 #import <Cordova/CDVAvailability.h>
+#import <Onfido/Onfido.h>
 
 @implementation MyCordovaPlugin
-
+    
 - (void)pluginInitialize {
 }
-
-- (void)echo:(CDVInvokedUrlCommand *)command {
-  NSString* phrase = [command.arguments objectAtIndex:0];
-  NSLog(@"%@", phrase);
+    
+- (void)launchFido:(CDVInvokedUrlCommand *)command {
+    //NSString* phrase = [command.arguments objectAtIndex:0];
+    
+    NSError *configError = NULL;
+    ONFlowConfig *config = [[self getOnfidoConfigBuilder] buildAndReturnError:&configError];
+    if (configError == NULL) {
+        ONFlow * onFlow = [[ONFlow alloc] initWithFlowConfiguration: config];
+        [onFlow withResponseHandler:^(ONFlowResponse *response) {
+            if (response.results) {
+                NSDateFormatter *df = [[NSDateFormatter alloc] init];
+                [df setDateFormat:@"dd/MM/yyyy"];
+                CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[df stringFromDate:[NSDate date]]];
+                [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+            }
+        }];
+        NSError *runError = NULL;
+        UIViewController *onfidoController = [onFlow runAndReturnError:&runError];
+        if (runError == NULL) {
+            [self.viewController presentViewController:onfidoController animated:YES completion:nil];
+        }
+    }
+    
 }
-
-- (void)getDate:(CDVInvokedUrlCommand *)command {
-  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  NSLocale *enUSPOSIXLocale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
-  [dateFormatter setLocale:enUSPOSIXLocale];
-  [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZZ"];
-
-  NSDate *now = [NSDate date];
-  NSString *iso8601String = [dateFormatter stringFromDate:now];
-
-  CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:iso8601String];
-  [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+    
+- (ONApplicant*) getApplicant {
+    return [ONApplicant newWithFirstName:@"Ionic" lastName:@"User"];
 }
-
-@end
+    
+- (ONFlowConfigBuilder*) getOnfidoConfigBuilder {
+    ONFlowConfigBuilder *configBuilder = [ONFlowConfig builder];
+    [configBuilder withToken:@"YOUR_MOBILE_TOKEN"];
+    [configBuilder withApplicant:[self getApplicant]];
+    [configBuilder withDocumentStep];
+    [configBuilder withFaceStepOfVariant:ONFaceStepVariantPhoto];
+    return configBuilder;
+}
+    
+    @end
