@@ -36,7 +36,7 @@
         </js-module>
         <pods-config ios-min-version="9.0" use-frameworks="true">
         </pods-config>
-        <pod name="Onfido" />
+        <pod name="Onfido" version="9.0.0" spec=":modular_headers => true" />
         <config-file target="config.xml" parent="/*">
             <feature name="MyCordovaPlugin">
                 <param name="ios-package" value="MyCordovaPlugin" onload="true" />
